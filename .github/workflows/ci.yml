@@ -1,0 +1,47 @@
+name: Continuous Integration
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: ["main"]
+  workflow_dispatch:
+
+jobs:
+  python-black:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Lint
+        uses: psf/black@stable
+
+  flatpak:
+    name: Flatpak
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/andyholmes/flatter/gnome:45
+      options: --privileged
+    permissions:
+      contents: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      # Skip for now
+      # - name: Setup GPG
+      #   id: gpg
+      #   uses: crazy-max/ghaction-import-gpg@v6
+      #   with:
+      #     gpg_private_key: ${{ secrets.GPG_PRIVATE_KEY }}
+
+      - name: Build
+        id: build
+        uses: andyholmes/flatter@main
+        with:
+          files: |
+            build-aux/ai.mimic3.Speech.Provider.json
+          arch: x86_64
+          # gpg-sign: ${{ steps.gpg.outputs.fingerprint }}
+          upload-bundles: true

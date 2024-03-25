@@ -110,7 +110,14 @@ class Mimic3SynthWorker(GObject.Object):
                 ww.write(result.audio_bytes)
         ww.close()
 
-    def synthesize(self, fd, text, voice_id=None, pitch=None, rate=None,):
+    def synthesize(
+        self,
+        fd,
+        text,
+        voice_id=None,
+        pitch=None,
+        rate=None,
+    ):
         self.sink.set_property("fd", fd)
         self.source = Gst.ElementFactory.make("fdsrc", "source")
         self.pipeline.add(self.source)
@@ -199,6 +206,7 @@ class MimicProvider(object):
                         )
         return voices
 
+
 def main():
     mainloop = GLib.MainLoop()
 
@@ -207,7 +215,7 @@ def main():
         "/ai/mimic3/Speech/Provider",
         MimicProvider(mainloop),
         server=GLibServerUnix,
-     )
+    )
     bus.register_service("ai.mimic3.Speech.Provider")
 
     mainloop.run()

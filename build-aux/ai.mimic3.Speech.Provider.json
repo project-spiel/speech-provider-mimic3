@@ -142,7 +142,7 @@
       "sources": [
         {
           "type": "dir",
-          "path": "../providers/mimic3"
+          "path": "../"
         }
       ]
     }
